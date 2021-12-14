@@ -22,12 +22,12 @@ def Coins(request):
         dicts = []
         if data['status'] == 'success':
             try:
-                for i in range(int(data['data']['total_txs'])):
+                for i in range(int(data['data']['total_txs'])+1):
                     time = data['data']['txs'][i]['time']
                     obj = {
                         'number': i + 1,
                         'time': datetime.utcfromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S'),
-                        'fee': data['data']['txs'][i]["incoming"],
+                        # 'fee': data['data']['txs'][i]['pending_value'],
                         'confirms': data['data']['txs'][i]['confirmations'],
                         # 'source': data['result'][i]['from'], 'recipient': data['result'][i]['to']
                     }
@@ -52,7 +52,7 @@ def Coins(request):
         dicts = []
         if data['status'] == '1':
             try:
-                for i in range(100):
+                for i in range(200):
                     time = int(data['result'][i]['timeStamp'])
                     obj = {
                         'number': i + 1,
@@ -81,7 +81,7 @@ def Coins(request):
         if data['status'] == '1':
             dicts = []
             try:
-                for i in range(100):
+                for i in range(200):
                     if data['result'][i]['tokenSymbol'] == "USDT":
                         time = int(data['result'][i]['timeStamp'])
                         obj = {
