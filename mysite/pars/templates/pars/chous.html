@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-2.2.4.js"
+            integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
+</head>
+<body>
+<div class="container_main">
+    <h1>Cripto Info</h1>
+    {% csrf_token %}
+    <select id="user_coin">
+        <option value="1">Bitcoin</option>
+        <option value="2">Ethereum</option>
+        <option value="3">Tether</option>
+    </select>
+    <input id="address" type="text" size="100" autocomplete="off"
+           placeholder="Введите адрес кошелька ">
+    <button type="button" id="submit">Найти</button>
+    <div class="out">
+        <div id="output"></div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var output = $('#output');
+        $('#submit').on('click', function () {
+            $.ajax({
+                method: "GET",
+                dataType: "json",
+                url: '',
+                data: {
+                    message: $("input#address").val(),
+                    user_coin: $("select#user_coin").val()
+                },
+                // beforeSend: function () { // Функция вызывается перед отправкой запроса
+                //     output.text('Запрос отправлен. Ждите ответа.');
+                // },
+                error: function (req, text, error) { // отслеживание ошибок во время выполнения ajax-запроса
+                    output.text(' Неверный адрес');
+                },
+                success: function (data) {
+
+                    if (data.dicts.length === 0) {
+                        var a = "Тразакций нет"
+                        $("#output").text(a)
+                    } else {
+                        var result = ''
+                        $("#output").text(result)
+                        for (var i = 0; i < data.dicts.length; i++) {
+                            var html = `<div class="results_info">Дата: ${data.dicts[i].time}  Использовано Топлива:${data.dicts[i].fee}(Единиц)  Конфирмаций: ${data.dicts[i].confirms} from:  ${data.dicts[i].source} to: ${data.dicts[i].recipient} </div> <br>`
+                            $("#output").append(html)
+                        }
+                    }
+                }
+            });
+        });
+    })
+</script>
+</body>
+</html>
